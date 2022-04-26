@@ -1,0 +1,81 @@
+[tool.poetry]
+name = "Mediasoft CRM"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "0.75.1"
+gunicorn = "20.1.0"
+pydantic = { extras = ["dotenv"], version = "1.9.0" }
+python-multipart = "0.0.5"
+requests = "2.27.1"
+setproctitle = "1.2.2"
+starlette-prometheus = "0.9.0"
+uvicorn = "0.17.6"
+PyYAML = "^6.0"
+alembic = "^1.7.5"
+SQLAlchemy = "^1.4.27"
+pandas = "^1.3.4"
+psycopg2 = "^2.9.2"
+structlog = "^21.5.0"
+orjson = "^3.6.7"
+asyncpg = "^0.25.0"
+colorama = "^0.4.4"
+better-exceptions = "^0.3.3"
+databases = "^0.5.5"
+
+
+[tool.poetry.dev-dependencies]
+autoflake = "1.4"
+black = "22.3.0"
+isort = "5.10.1"
+flake8 = "4.0.1"
+flake8-black = "0.3.2"
+flake8-bugbear = "22.3.23"
+flake8-coding = "1.3.2"
+flake8-comprehensions = "3.8.0"
+flake8-debugger = "4.0.0"
+flake8-eradicate = "1.2.0"
+flake8-executable = "2.1.1"
+flake8-isort = "4.1.1"
+flake8-logging-format = "0.6.0"
+flake8-pie = "0.15.0"
+flake8-pytest-style = "1.6.0"
+flake8-quotes = "3.3.1"
+flake8-simplify = "0.19.2"
+pytest = "7.1.1"
+pytest-cov = "3.0.0"
+pytest-mock = "3.7.0"
+pytest-xdist = "2.5.0"
+pytest-asyncio = "^0.18.3"
+httpx = "^0.22.0"
+
+
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+
+[tool.isort]
+line_length = 120
+combine_as_imports = true
+order_by_type = true
+include_trailing_comma = true
+use_parentheses = true
+multi_line_output = 3
+known_third_party = ["alembic"]
+
+[tool.coverage.run]
+branch = true
+omit = ["*tests*", "*venv*", "alembic/*"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "raise NotImplementedError", ]
+
+[tool.pytest.ini_options]
+addopts = "--failed-first --exitfirst --showlocals"
+python_files = "tests.py test_*.py"
+python_functions = "test_*"
+asyncio_mode = "auto"
