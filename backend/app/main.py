@@ -1,4 +1,6 @@
-from backend.app.events.ticker_events import update_ticker_values
+from starlette.middleware.cors import CORSMiddleware
+
+from backend.app.events.ticker_events import TickerRefresher
 from fastapi import FastAPI
 
 from backend.app.dependencies.database import db
@@ -14,6 +16,13 @@ def append_routers(app: FastAPI) -> None:
 
 def append_middlewares(app: FastAPI) -> None:
     app.add_middleware(RequestIdMiddleware)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 def append_events(app: FastAPI) -> None:
@@ -23,7 +32,9 @@ def append_events(app: FastAPI) -> None:
 
     @app.on_event("startup")
     async def startup():
-        await update_ticker_values()
+        refresher = TickerRefresher()
+        await refresher.init_tickers()
+        await refresher.update_ticker_values()
 
     @app.on_event("shutdown")
     async def shutdown():

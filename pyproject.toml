@@ -25,6 +25,8 @@ asyncpg = "^0.25.0"
 colorama = "^0.4.4"
 better-exceptions = "^0.3.3"
 databases = "^0.5.5"
+websocket = "^0.2.1"
+websockets = "^10.3"
 
 
 [tool.poetry.dev-dependencies]

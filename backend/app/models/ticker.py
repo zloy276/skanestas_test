@@ -28,7 +28,7 @@ class Ticker(Base):
 class TickerChange(Base):
     __tablename__ = "ticker_change"
 
-    id = Column(BigInteger, primary_key=True, nullable=False, unique=True, index=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
 
     ticker_id = Column(BigInteger, ForeignKey("ticker.id"))
     change_time = Column(DateTime, nullable=False)

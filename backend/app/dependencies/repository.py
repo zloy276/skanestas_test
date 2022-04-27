@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import functools
-from typing import Generic, TypeVar, Type
+from typing import Generic, TypeVar, Type, List
 
 import structlog
 from databases import Database
@@ -46,14 +46,14 @@ class Repository(Generic[T, V]):
         return await self.database.execute(query, values)
 
     async def find(self, value) -> T:
-        result = await self.database.fetch_one(query=select(self.model).where(self.model.id == value).order(id))
+        result = await self.database.fetch_one(query=select(self.model).where(self.model.id == value))
         return self.model(**result)
 
     async def find_one_by(self, field, value):
         result = await self.database.fetch_one(query=select(self.model).where(field == value))
         return self.model(**result)
 
-    async def find_by(self, field, value, lazy: bool = True) -> list[T]:
+    async def find_by(self, field, value, lazy: bool = True) -> List[T]:
         result = await self.database.fetch_all(query=select(self.model).where(field == value))
         return list(self.model(**row) for row in result)
 

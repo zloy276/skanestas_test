@@ -2,6 +2,7 @@ from backend.app.schemas.__meta__ import Schema
 
 
 class TickerSchema(Schema):
+    id: int
     name: str
     current_value: int
 

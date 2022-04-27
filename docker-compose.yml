@@ -10,31 +10,22 @@ services:
     volumes:
       - .:/usr/src/backend/
     depends_on:
-      - db
+      - skanestas_db
     entrypoint: ["python", "backend/app/main.py"]
-    healthcheck:
-      test: [ "CMD", "curl", "${BIND_IP}:${BIND_PORT}" ]
-      retries: 5
-      interval: 60s
     container_name: backend
 
-  db:
+  skanestas_db:
     image: postgres:13
     ports:
-      - "${DB_PORT}:${DB_PORT}"
-    env_file: ./.env
-    restart: on-failure
+      - "5434:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
+      - ./dumps:/root/dumps
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "${DB_NAME}" ]
-      retries: 5
-      interval: 5s
-    container_name: db
+      POSTGRES_DB: "skanestas"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    container_name: skanestas_db
 
 volumes:
   postgres_data:

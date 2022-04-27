@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vue-chartjs": "^1.2.0"
+  }
+}
