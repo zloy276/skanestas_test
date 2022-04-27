@@ -6,7 +6,7 @@ from typing import Generic, TypeVar, Type, List
 import structlog
 from databases import Database
 from fastapi import Depends
-from sqlalchemy import select, insert, update
+from sqlalchemy import select, insert, update, desc
 
 from backend.app.dependencies.database import get_database
 from backend.app.models.__meta__ import Base
@@ -64,6 +64,13 @@ class Repository(Generic[T, V]):
         result = await self.database.fetch_all(query=query)
         return list(self.model(**row) for row in result)
 
+    async def search_latest(self, params: SearchSchema):
+        query = select(self.model)
+        query = self._with_search(query, params.filter)
+        query = self._with_paging(query, params.page, params.limit)
+        result = await self.database.fetch_all(query=query.order_by(desc(self.model.change_time)))
+        return list(self.model(**row) for row in result)
+
     async def create(self, schema: V) -> T:
         result = await self.database.fetch_one(query=insert(self.model).values(**schema.dict()).returning(self.model))
         return self.model(**result)
@@ -76,7 +83,7 @@ class Repository(Generic[T, V]):
         return query.offset(page * limit).limit(limit)
 
     def _with_search(self, query, where: dict):
-        return query.where(*list(self.model[field].in_(values) for field, values in (where or dict()).items()))
+        return query.where(*list(self.model.__dict__[field].in_(values) for field, values in (where or dict()).items()))
 
 
 def get_repository(model: Type[T]) -> Repository[T, V]:

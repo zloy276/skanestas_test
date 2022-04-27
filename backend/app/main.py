@@ -34,7 +34,7 @@ def append_events(app: FastAPI) -> None:
     async def startup():
         refresher = TickerRefresher()
         await refresher.init_tickers()
-        await refresher.update_ticker_values()
+        # await refresher.update_ticker_values()
 
     @app.on_event("shutdown")
     async def shutdown():

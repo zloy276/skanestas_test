@@ -19,14 +19,14 @@ async def ticker_websocket(
         ticker_id: int,
         repository: Repository = get_repository(TickerChange),
         page: int = 0,
-        limit: int = 25
+        limit: int = 100
 ):
     await websocket.accept()
-    data = await repository.search(SearchSchema(page=page, limit=limit))
     # await websocket.send_json(data)
     while True:
         # await websocket.send_json(data)
-        await websocket.send_json({'123': jsonable_encoder(data)})
+        data = await repository.search(SearchSchema(page=page, limit=limit, filter={'ticker_id': [ticker_id]}))
+        await websocket.send_json({'ticker_changes': jsonable_encoder(data)})
         await sleep(2)
 
 
